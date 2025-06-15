@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+from generadores import generar_domino
+
 st.set_page_config(
     page_title="Generador de Juegos Español",
     page_icon="🎲",
@@ -23,8 +25,20 @@ juego = st.sidebar.selectbox(
 )
 
 if juego == "Dominó":
-    st.header("🁢 Generador de Dominó palabra-imagen")
-    st.markdown("Configura las opciones del juego y genera las fichas.")
+        if st.button("Generar dominó"):
+        fichas = generar_domino(catalogo, temas_seleccionados, numero_fichas)
+
+        if fichas:
+            st.subheader("Fichas generadas:")
+            cols = st.columns(len(fichas))
+            for i, ficha in enumerate(fichas):
+                with cols[i]:
+                    if ficha["orientacion"] == "horizontal":
+                        st.image(ficha["imagen"], caption=ficha["palabra"], use_column_width=True)
+                    else:
+                        st.image(ficha["imagen"], caption=ficha["palabra"], use_column_width="auto")
+
+
 
     # Opciones
     temas = catalogo['tema'].unique()
@@ -43,7 +57,17 @@ if juego == "Dominó":
     )
 
     if st.button("Generar dominó"):
-        st.info("Aquí va a aparecer el layout de las fichas (todavía no está implementado).")
+        if st.button("Generar dominó"):
+        fichas = generar_domino(catalogo, temas_seleccionados, numero_fichas)
+
+        if fichas:
+            st.subheader("Fichas generadas:")
+            cols = st.columns(len(fichas))
+            for i, ficha in enumerate(fichas):
+                with cols[i]:
+                    st.markdown(f"**{ficha['palabra'].capitalize()}**")
+                    st.image(ficha["imagen"], use_column_width=True)
+
 
 elif juego == "Unir con líneas":
     st.header("➰ Generador de juego: Unir con líneas (pendiente)")
