@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-
 from generadores import generar_domino
 
 st.set_page_config(
@@ -11,36 +10,22 @@ st.set_page_config(
 
 st.title("🎯 Generador de Juegos para Clase de Español")
 
-# Cargar datos
+# Cargar catálogo
 @st.cache_data
 def cargar_catalogo():
     return pd.read_csv("data/catalogo.csv")
 
 catalogo = cargar_catalogo()
 
-# Menú de navegación
+# Menú lateral
 juego = st.sidebar.selectbox(
     "Selecciona el tipo de juego",
     ["Dominó", "Unir con líneas", "Memorama"]
 )
 
 if juego == "Dominó":
-        if st.button("Generar dominó"):
-        fichas = generar_domino(catalogo, temas_seleccionados, numero_fichas)
+    st.header("🁢 Generador de Dominó palabra-imagen")
 
-        if fichas:
-            st.subheader("Fichas generadas:")
-            cols = st.columns(len(fichas))
-            for i, ficha in enumerate(fichas):
-                with cols[i]:
-                    if ficha["orientacion"] == "horizontal":
-                        st.image(ficha["imagen"], caption=ficha["palabra"], use_column_width=True)
-                    else:
-                        st.image(ficha["imagen"], caption=ficha["palabra"], use_column_width="auto")
-
-
-
-    # Opciones
     temas = catalogo['tema'].unique()
     temas_seleccionados = st.multiselect(
         "Elige uno o más temas",
@@ -53,11 +38,10 @@ if juego == "Dominó":
         min_value=4,
         max_value=20,
         value=6,
-        step=2  # par para que se pueda encadenar bien
+        step=2
     )
 
     if st.button("Generar dominó"):
-        if st.button("Generar dominó"):
         fichas = generar_domino(catalogo, temas_seleccionados, numero_fichas)
 
         if fichas:
@@ -68,8 +52,8 @@ if juego == "Dominó":
                     st.markdown(f"**{ficha['palabra'].capitalize()}**")
                     st.image(ficha["imagen"], use_column_width=True)
 
-
 elif juego == "Unir con líneas":
     st.header("➰ Generador de juego: Unir con líneas (pendiente)")
+
 elif juego == "Memorama":
     st.header("🃏 Generador de Memorama (pendiente)")
