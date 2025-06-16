@@ -1,12 +1,23 @@
 import streamlit as st
 import pandas as pd
 import random
+import base64  # Necesario para convertir imágenes a base64
 
 # ===================== FUNCIONES =====================
 
 
-# Dibuja una ficha individual con imagen y texto, horizontal o vertical
-def mostrar_ficha_dominio(imagen, texto, orientacion):
+# Convierte una imagen local en una cadena base64 para insertar en HTML
+def imagen_a_base64(path_imagen):
+    with open(path_imagen, "rb") as img_file:
+        data = img_file.read()
+    return base64.b64encode(data).decode()
+
+
+# Dibuja una ficha individual con imagen + texto incrustados dentro del borde
+def mostrar_ficha_dominio(imagen_path, texto, orientacion):
+    imagen_base64 = imagen_a_base64(imagen_path)
+    img_tag = f"<img src='data:image/png;base64,{imagen_base64}' style='max-height: 90%; max-width: 90%;'/>"
+
     if orientacion == "horizontal":
         st.markdown(
             f"""
@@ -22,7 +33,7 @@ def mostrar_ficha_dominio(imagen, texto, orientacion):
                 margin: auto;
             '>
                 <div style='width: 50%; display: flex; align-items: center; justify-content: center;'>
-                    <img src="{imagen}" style='max-height: 90%; max-width: 90%;' />
+                    {img_tag}
                 </div>
                 <div style='width: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;'>
                     {texto.capitalize()}
@@ -46,7 +57,7 @@ def mostrar_ficha_dominio(imagen, texto, orientacion):
                 margin: auto;
             '>
                 <div style='height: 50%; display: flex; align-items: center; justify-content: center;'>
-                    <img src="{imagen}" style='max-height: 90%; max-width: 90%;' />
+                    {img_tag}
                 </div>
                 <div style='height: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;'>
                     {texto.capitalize()}
@@ -57,7 +68,7 @@ def mostrar_ficha_dominio(imagen, texto, orientacion):
         )
 
 
-# Muestra las fichas de 2 en 2 en la pantalla
+# Muestra las fichas de 2 en 2 en pantalla
 def mostrar_fichas_encadenadas(fichas):
     for i in range(0, len(fichas), 2):
         cols = st.columns(2, gap="large")
